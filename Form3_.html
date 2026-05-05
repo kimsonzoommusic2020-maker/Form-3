@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Exam Master: 28-Point Audit</title>
+    <style>
+        :root { --main-green: #00ff41; --bg-black: #0d0d0d; }
+        body { background-color: var(--bg-black); color: var(--main-green); font-family: 'Courier New', Courier, monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        #game-box { border: 2px solid var(--main-green); padding: 30px; width: 95%; max-width: 850px; box-shadow: 0 0 15px var(--main-green); background: #000; }
+        .header { text-align: center; border-bottom: 2px solid var(--main-green); margin-bottom: 20px; padding-bottom: 10px; }
+        .stats { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 0.9rem; border-bottom: 1px dashed var(--main-green); padding-bottom: 5px; }
+        .question { font-size: 1.1rem; line-height: 1.4; margin-bottom: 20px; min-height: 60px; color: #fff; }
+        .options-grid { display: grid; gap: 10px; }
+        button { background: transparent; color: var(--main-green); border: 1px solid var(--main-green); padding: 12px; cursor: pointer; text-align: left; font-family: inherit; font-size: 0.95rem; transition: all 0.2s; }
+        button:hover { background: var(--main-green); color: #000; font-weight: bold; }
+        .hidden { display: none; }
+        #feedback { margin-top: 15px; padding: 10px; text-align: center; font-weight: bold; min-height: 40px; }
+        .correct { color: #fff; background: green; }
+        .wrong { color: #fff; background: red; }
+    </style>
+</head>
+<body>
+
+<div id="game-box">
+    <div class="header">
+        <h1>IT_FULL_AUDIT_v5.0</h1>
+        <p>28 DATA NODES DETECTED</p>
+    </div>
+
+    <div id="game-ui">
+        <div class="stats">
+            <span id="progress">NODE: 1/28</span>
+            <span id="score">SCORE: 0</span>
+        </div>
+        <div id="q-text" class="question">System Loading...</div>
+        <div id="options" class="options-grid"></div>
+        <div id="feedback" class="hidden"></div>
+    </div>
+
+    <div id="end-screen" class="hidden" style="text-align: center;">
+        <h2>AUDIT COMPLETE</h2>
+        <p id="final-stats" style="font-size: 1.3rem;"></p>
+        <p id="rank" style="font-weight: bold; font-size: 1.5rem; margin: 20px 0;"></p>
+        <button onclick="location.reload()">RE-INITIALIZE</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        /* SECTION A [cite: 2-32] */
+        { q: "Define the term 'Web Page'.", options: ["An HTML document on the web", "A physical piece of paper", "A computer battery", "A type of internet browser"], a: "An HTML document on the web" },
+        { q: "Which of these is an example of a web page?", options: ["The Contact Us page", "The CPU", "A printer cable", "A hard drive"], a: "The Contact Us page" },
+        { q: "Give a second example of a web page.", options: ["A Blog Post", "A Keyboard", "A Monitor", "An Operating System"], a: "A Blog Post" },
+        { q: "Why are webpages important in today’s world?", options: ["Global information sharing", "They replace electricity", "They fix hardware", "Only for entertainment"], a: "Global information sharing" },
+        { q: "What is the first step in planning a webpage?", options: ["Defining purpose/goal", "Coding HTML", "Buying a mouse", "Designing a logo"], a: "Defining purpose/goal" },
+        { q: "Why must you know your client when planning?", options: ["To meet their specific goals", "To know their age", "To borrow their laptop", "To find their address"], a: "To meet their specific goals" },
+        { q: "Why avoid spelling errors on professional sites?", options: ["To maintain credibility", "To save battery", "To stop hackers", "To speed up typing"], a: "To maintain credibility" },
+        { q: "Give an example of a professional website.", options: ["A government portal", "A personal chat room", "A blank screen", "A video game character"], a: "A government portal" },
+        { q: "Define 'Website Evaluation'.", options: ["Assessing site quality", "Buying a domain", "Deleting files", "Creating a link"], a: "Assessing site quality" },
+        { q: "State one benefit of website evaluation.", options: ["Ensures info reliability", "Makes the mouse faster", "Changes the font color", "Deletes old emails"], a: "Ensures info reliability" },
+        { q: "List a step in evaluating a website.", options: ["Checking for accuracy", "Unplugging the router", "Buying a printer", "Changing the wallpaper"], a: "Checking for accuracy" },
+        { q: "List another step in evaluating a website.", options: ["Checking for currency", "Cleaning the monitor", "Installing a game", "Checking the RAM size"], a: "Checking for currency" },
+        { q: "What is an advantage of a website?", options: ["Global reach/accessibility", "It never needs power", "It is always free", "It fixes itself"], a: "Global reach/accessibility" },
+        { q: "What is a disadvantage of a website?", options: ["Security/Hacking risks", "Low cost", "Worldwide access", "Fast updates"], a: "Security/Hacking risks" },
+
+        /* SECTION B [cite: 33-45] */
+        { q: "Define data communication.", options: ["Exchange of data via medium", "Printing a letter", "Turning on a PC", "Typing on Word"], a: "Exchange of data via medium" },
+        { q: "Which component is needed for data communication?", options: ["Sender", "Mouse pad", "Webcam cover", "Speaker"], a: "Sender" },
+        { q: "What is the difference between Simplex and Full-Duplex?", options: ["One-way vs Simultaneous two-way", "They are the same", "One is for printers only", "Full-Duplex is slower"], a: "One-way vs Simultaneous two-way" },
+        { q: "What is the role of a modem?", options: ["Analog/Digital conversion", "Storing files", "Printing photos", "Cooling the CPU"], a: "Analog/Digital conversion" },
+
+        /* SECTION C [cite: 46-61] */
+        { q: "What is the primary function of the CPU?", options: ["Execute instructions", "Store permanent data", "Display images", "Scan paper"], a: "Execute instructions" },
+        { q: "Which is an example of an input device?", options: ["Keyboard", "Monitor", "Printer", "Speaker"], a: "Keyboard" },
+        { q: "Which is an example of an output device?", options: ["Monitor", "Mouse", "Microphone", "Scanner"], a: "Monitor" },
+        { q: "Define 'software application'.", options: ["Program for specific tasks", "Physical computer parts", "Internet cable", "Power supply"], a: "Program for specific tasks" },
+
+        /* SECTION D [cite: 62-74] */
+        { q: "Define the term 'Internet'.", options: ["Global network of networks", "Private office network", "A specific browser", "A laptop brand"], a: "Global network of networks" },
+        { q: "What is an extranet?", options: ["Private network for outsiders", "Public gaming site", "Internal-only network", "A type of virus"], a: "Private network for outsiders" },
+
+        /* SECTION E [cite: 75-91] */
+        { q: "Small office: Why use a router?", options: ["To manage data traffic", "To charge phones", "To scan documents", "To store music"], a: "To manage data traffic" },
+        { q: "School goal: Recommend software.", options: ["LMS (Google Classroom)", "Photo Editor", "Video Game", "Calculator"], a: "LMS (Google Classroom)" },
+        { q: "Hospital use: Name one software.", options: ["Patient Database", "Music Player", "Graphic Design", "Social Media"], a: "Patient Database" },
+        { q: "How does the Internet help remote collaboration?", options: ["Cloud sharing/Video calls", "Replacing all workers", "Stopping all work", "Deleting files"], a: "Cloud sharing/Video calls" }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById('progress').innerText = `NODE: ${currentIdx + 1}/${questions.length}`;
+        document.getElementById('q-text').innerText = `> ${q.q}`;
+        const optionsDiv = document.getElementById('options');
+        optionsDiv.innerHTML = '';
+        q.options.sort(() => Math.random() - 0.5).forEach(opt => {
+            const btn = document.createElement('button');
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(opt);
+            optionsDiv.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(choice) {
+        const feedback = document.getElementById('feedback');
+        feedback.classList.remove('hidden', 'correct', 'wrong');
+        if (choice === questions[currentIdx].a) {
+            score++;
+            feedback.innerText = "ACCESS GRANTED";
+            feedback.classList.add('correct');
+        } else {
+            feedback.innerText = `ACCESS DENIED: "${questions[currentIdx].a}"`;
+            feedback.classList.add('wrong');
+        }
+        document.getElementById('score').innerText = `SCORE: ${score}`;
+        feedback.classList.remove('hidden');
+        setTimeout(() => {
+            feedback.classList.add('hidden');
+            currentIdx++;
+            if (currentIdx < questions.length) loadQuestion();
+            else showResults();
+        }, 1100);
+    }
+
+    function showResults() {
+        document.getElementById('game-ui').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('final-stats').innerText = `Data Points Secured: ${score} / ${questions.length}`;
+        let rank = score > 25 ? "MASTER ARCHITECT" : score > 18 ? "SYSTEM ANALYST" : "TRAINEE";
+        document.getElementById('rank').innerText = `RANK: ${rank}`;
+    }
+
+    loadQuestion();
+</script>
+</body>
+</html>
